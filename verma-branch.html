@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Hub</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#141e30,#243b55);
+    color:white;
+    min-height:100vh;
+    padding-bottom:120px;
+}
+
+header{
+    text-align:center;
+    padding:30px;
+}
+
+.music-list{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.song{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.1);
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.song:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+.song button{
+    background:#1db954;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.player{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#111;
+    padding:15px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:15px;
+}
+
+.info{
+    flex:1;
+    min-width:180px;
+}
+
+.controls button{
+    background:#1db954;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    margin:0 3px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+#progress{
+    flex:1;
+}
+
+.volume{
+    width:100px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🎵 Music Hub</h1>
+    <p>Simple Music Player</p>
+</header>
+
+<div class="music-list">
+
+    <div class="song">
+        <div>
+            <h3>Sample Song 1</h3>
+            <small>Artist One</small>
+        </div>
+        <button onclick="playSong(0)">Play</button>
+    </div>
+
+    <div class="song">
+        <div>
+            <h3>Sample Song 2</h3>
+            <small>Artist Two</small>
+        </div>
+        <button onclick="playSong(1)">Play</button>
+    </div>
+
+    <div class="song">
+        <div>
+            <h3>Sample Song 3</h3>
+            <small>Artist Three</small>
+        </div>
+        <button onclick="playSong(2)">Play</button>
+    </div>
+
+</div>
+
+<div class="player">
+
+    <div class="info">
+        <h3 id="title">No Song Playing</h3>
+        <small id="artist">Select a song</small>
+    </div>
+
+    <div class="controls">
+        <button onclick="prevSong()">⏮</button>
+        <button onclick="togglePlay()" id="playBtn">▶</button>
+        <button onclick="nextSong()">⏭</button>
+    </div>
+
+    <input type="range" id="progress" value="0">
+
+    <input
+        type="range"
+        class="volume"
+        min="0"
+        max="1"
+        step="0.1"
+        value="1"
+        id="volume">
+
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+const songs = [
+{
+title:"Sample Song 1",
+artist:"Artist One",
+src:"song1.mp3"
+},
+{
+title:"Sample Song 2",
+artist:"Artist Two",
+src:"song2.mp3"
+},
+{
+title:"Sample Song 3",
+artist:"Artist Three",
+src:"song3.mp3"
+}
+];
+
+let currentSong = 0;
+
+const audio = document.getElementById("audio");
+const title = document.getElementById("title");
+const artist = document.getElementById("artist");
+const progress = document.getElementById("progress");
+const playBtn = document.getElementById("playBtn");
+
+function loadSong(index){
+    currentSong = index;
+    audio.src = songs[index].src;
+    title.textContent = songs[index].title;
+    artist.textContent = songs[index].artist;
+}
+
+function playSong(index){
+    loadSong(index);
+    audio.play();
+    playBtn.textContent = "⏸";
+}
+
+function togglePlay(){
+    if(audio.paused){
+        audio.play();
+        playBtn.textContent = "⏸";
+    }else{
+        audio.pause();
+        playBtn.textContent = "▶";
+    }
+}
+
+function nextSong(){
+    currentSong = (currentSong + 1) % songs.length;
+    playSong(currentSong);
+}
+
+function prevSong(){
+    currentSong =
+      (currentSong - 1 + songs.length) % songs.length;
+    playSong(currentSong);
+}
+
+audio.addEventListener("timeupdate",()=>{
+    progress.max = audio.duration || 0;
+    progress.value = audio.currentTime;
+});
+
+progress.addEventListener("input",()=>{
+    audio.currentTime = progress.value;
+});
+
+document
+.getElementById("volume")
+.addEventListener("input",(e)=>{
+    audio.volume = e.target.value;
+});
+
+audio.addEventListener("ended",nextSong);
+</script>
+
+</body>
+</html>
