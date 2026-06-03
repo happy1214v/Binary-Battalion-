@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Interactive Page</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #2C3E50, #4CA1AF);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: min(960px, 90%);
+      padding: 24px;
+      background: rgba(0,0,0,0.45);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 18px;
+      border-radius: 18px;
+    }
+    button, input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      cursor: pointer;
+      background: #ff9f1c;
+      color: #111;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    button:hover {
+      transform: translateY(-1px);
+      background: #ffb347;
+    }
+    .output {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 12px;
+      min-height: 48px;
+    }
+    .animated-circle {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff7f50, #8a2be2);
+      animation: spinGlow 6s linear infinite;
+      box-shadow: 0 0 30px rgba(255,127,80,0.35);
+    }
+    @keyframes spinGlow {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.05); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fun Interactive Page</h1>
+    <div class="animated-circle"></div>
+    <div class="grid">
+      <div class="card">
+        <h2>Greeting Booth</h2>
+        <label for="nameInput">Enter your name:</label>
+        <input id="nameInput" type="text" placeholder="Type something fun..." />
+        <button id="greetBtn">Show greeting</button>
+        <div id="greetOutput" class="output">Hello, friend! Type your name and click the button.</div>
+      </div>
+      <div class="card">
+        <h2>Counter Game</h2>
+        <button id="incrementBtn">Count Up</button>
+        <button id="resetBtn">Reset Counter</button>
+        <div id="counterOutput" class="output">0</div>
+      </div>
+      <div class="card">
+        <h2>Color Mood</h2>
+        <input id="colorPicker" type="color" value="#4ca1af" />
+        <button id="changeThemeBtn">Change background</button>
+        <div id="colorOutput" class="output">Pick a color and make the page brighter.</div>
+      </div>
+      <div class="card">
+        <h2>Guess the Number</h2>
+        <p>Pick a number from 1 to 10.</p>
+        <input id="guessInput" type="number" min="1" max="10" placeholder="Guess" />
+        <button id="guessBtn">Check guess</button>
+        <div id="guessOutput" class="output">Good luck!</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const nameInput = document.getElementById('nameInput');
+    const greetBtn = document.getElementById('greetBtn');
+    const greetOutput = document.getElementById('greetOutput');
+    const incrementBtn = document.getElementById('incrementBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const counterOutput = document.getElementById('counterOutput');
+    const colorPicker = document.getElementById('colorPicker');
+    const changeThemeBtn = document.getElementById('changeThemeBtn');
+    const colorOutput = document.getElementById('colorOutput');
+    const guessInput = document.getElementById('guessInput');
+    const guessBtn = document.getElementById('guessBtn');
+    const guessOutput = document.getElementById('guessOutput');
+
+    let counter = 0;
+    let secretNumber = Math.floor(Math.random() * 10) + 1;
+
+    greetBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      greetOutput.textContent = name ? `Hello, ${name}! Welcome to the page.` : 'Hello, creative soul! Enter a name above.';
+    });
+
+    incrementBtn.addEventListener('click', () => {
+      counter += 1;
+      counterOutput.textContent = counter;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      counter = 0;
+      counterOutput.textContent = counter;
+    });
+
+    changeThemeBtn.addEventListener('click', () => {
+      const selectedColor = colorPicker.value;
+      document.body.style.background = `linear-gradient(135deg, ${selectedColor}, #0f172a)`;
+      colorOutput.textContent = `Background set to ${selectedColor}. Nice choice!`;
+    });
+
+    guessBtn.addEventListener('click', () => {
+      const guess = Number(guessInput.value);
+      if (!guess || guess < 1 || guess > 10) {
+        guessOutput.textContent = 'Please enter a number between 1 and 10.';
+        return;
+      }
+      if (guess === secretNumber) {
+        guessOutput.textContent = `Correct! The secret number was ${secretNumber}. Try again with a new number.`;
+        secretNumber = Math.floor(Math.random() * 10) + 1;
+      } else if (guess < secretNumber) {
+        guessOutput.textContent = 'Too low — try a higher number!';
+      } else {
+        guessOutput.textContent = 'Too high — try a lower number!';
+      }
+    });
+  </script>
+</body>
+</html>
